@@ -8,12 +8,16 @@ The first prerequisite is to be able to access your monitor using the comand lin
 ## Setting up ddcutil (CLI)
 1. Install ddcutil: [prebuilt](http://www.ddcutil.com/#installing-ddcutil-from-prebuilt-packages), [aur](https://aur.archlinux.org/packages/ddcutil-git/) or [from source](http://www.ddcutil.com/building/)
 1. load i2c-dev kernel module at boot:
-```#/etc/modules-load.d/ddc.conf
-    i2c_dev```
-    after reboot `modprobe` should report i2c-dev.
+```
+#/etc/modules-load.d/ddc.conf
+    i2c_dev
+```
+after reboot `modprobe` should report i2c-dev.
 1. create a udev rule setting ownership for `/dev/i2c-*` files to members of the i2c group.
-    ```#/etc/udev/rules.d/10-local_i2c_group.rules
-        KERNEL=="i2c-[0-9]*", GROUP="i2c"```
+```
+#/etc/udev/rules.d/10-local_i2c_group.rules
+    KERNEL=="i2c-[0-9]*", GROUP="i2c"
+```
 1. create the i2c group, and add yourself to the group.
 
 `ddcutil detect` should now find your DDC/CI capable monitors.
