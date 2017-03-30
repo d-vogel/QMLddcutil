@@ -129,41 +129,12 @@ void DDCutilController::detect(){
             }
         }
     }
-
-    //    qDebug()<<"starting display";
-    //    //display all result
-
-    //    for(int iDisp=0;iDisp<m_displayHandleList.count();iDisp++)
-    //    {
-    //        QMap<QString, int>::iterator iVcp;
-    //        for (iVcp = m_descrToVcp_perDisp.at(iDisp)->begin();
-    //             iVcp!=m_descrToVcp_perDisp.at(iDisp)->end();++iVcp)
-    //        {
-    //            //            qDebug()<<iVcp.key();
-
-    //            qDebug()<<iVcp.value()<<" : "<<iVcp.key();
-    //            //            if(iVcp.value() != NULL)
-    //            //            {
-    //            //                qDebug()<<iVcp.key()<<" : "<<iVcp.value()->feature_name<<"-"<<iVcp.value()->desc;
-
-    //            //                if((iVcp.value()->feature_flags & DDCA_SIMPLE_NC) == DDCA_SIMPLE_NC)
-    //            //                {
-    //            //                    for(int iVcpVal=0; iVcp.value()->sl_values[iVcpVal].value_code!=0;iVcpVal++)
-    //            //                    {
-    //            //                        qDebug()<<"\t"<< iVcp.value()->sl_values[iVcpVal].value_code
-    //            //                               <<":"<< iVcp.value()->sl_values[iVcpVal].value_name;
-    //            //                    }
-    //            //                }
-    //            //            }
-    //            //            else
-    //            //            {
-    //            //                qDebug()<<"no Version_Feature_Info for "<<iVcp.key();
-    //            //            }
-
-
-    //        }
-    //    }
     qDebug()<<"done with display";
+}
+
+unsigned int DDCutilController::monitorNumber() const
+{
+    return m_displayHandleList.count();
 }
 
 
@@ -184,67 +155,58 @@ void DDCutilController::detect(){
 //    //    return false;
 //}
 
-long DDCutilController::brightness() const
+long DDCutilController::brightness(const unsigned int dispIdx) const
 {
 
     //FIXME: gets value for display 1
     Single_Vcp_Value *returnValue;
-    ddca_get_vcp_value(m_displayHandleList.at(0),
-                       m_descrToVcp_perDisp.at(0)->value("Brightness"),
-                       NON_TABLE_VCP_VALUE, &returnValue);
+
+        ddca_get_vcp_value(m_displayHandleList.at(dispIdx),
+                           m_descrToVcp_perDisp.at(dispIdx)->value("Brightness"),
+                           NON_TABLE_VCP_VALUE, &returnValue);
 
     return (long)returnValue->val.c.cur_val;
 }
 
-long DDCutilController::brightnessMax() const
+long DDCutilController::brightnessMax(const unsigned int dispIdx) const
 {
     Single_Vcp_Value *returnValue;
-    ddca_get_vcp_value(m_displayHandleList.at(0),
-                       m_descrToVcp_perDisp.at(0)->value("Brightness"),
-                       NON_TABLE_VCP_VALUE, &returnValue);
+
+        ddca_get_vcp_value(m_displayHandleList.at(dispIdx),
+                           m_descrToVcp_perDisp.at(dispIdx)->value("Brightness"),
+                           NON_TABLE_VCP_VALUE, &returnValue);
 
     return (long) returnValue->val.c.max_val;
 
 }
 
-QList<QString> DDCutilController::whitePointList() const
+QList<QString> DDCutilController::whitePointList(const unsigned int dispIdx) const
 {
-    return m_vcpTovcpValueWithDescr_perDisp.at(0)
-            ->value( m_descrToVcp_perDisp.at(0)->value("Select color preset") )
+    return m_vcpTovcpValueWithDescr_perDisp.at(dispIdx)
+            ->value( m_descrToVcp_perDisp.at(dispIdx)->value("Select color preset") )
             ->values();
 }
 
-void DDCutilController::setBrightness(long value)
+void DDCutilController::setBrightness(const unsigned int dispIdx, long value)
 {
     int rc;
-    qDebug()<<"trying to set new brightness:" << (int)value;
-    //    qDebug()<<"nb of handles: "<<m_displayHandleList.count();
-    for(int iDisp=0;iDisp<m_displayHandleList.count();iDisp++)
-    {
-        //        qDebug()<<"for disp: "<<iDisp;
-
-        rc = ddca_set_continuous_vcp_value(m_displayHandleList.at(iDisp), m_descrToVcp_perDisp.at(iDisp)->value("Brightness"), (int)value);
+        rc = ddca_set_continuous_vcp_value(m_displayHandleList.at(dispIdx), m_descrToVcp_perDisp.at(dispIdx)->value("Brightness"), (int)value);
         qDebug()<<"set brightness returned: "<<rc;
-    }
 }
 
-QString DDCutilController::nameForDisplay(const unsigned int iDisplay)
+QString DDCutilController::nameForDisplay(const unsigned int dispIdx)
 {
-    return QString(m_displayInfoList.at(iDisplay).model_name);
+    return QString(m_displayInfoList.at(dispIdx).model_name);
 }
 
-void DDCutilController::setWhitepoint(const QString &newWhitepoint)
+void DDCutilController::setWhitepoint(const unsigned int dispIdx, const QString &newWhitepoint)
 {
     int rc;
     qDebug()<<"trying to set new whitepoint:" << newWhitepoint;
-    for(int iDisp=0;iDisp<m_displayHandleList.count();iDisp++)
-    {
-        //        qDebug()<<"for disp: "<<iDisp;
 
-        rc = ddca_set_continuous_vcp_value(m_displayHandleList.at(iDisp),
-                                           m_descrToVcp_perDisp.at(iDisp)->value("Select color preset"),
-                                           m_vcpTovcpValueWithDescr_perDisp.at(iDisp)->value(m_descrToVcp_perDisp.at(0)->value("Select color preset"))->key(newWhitepoint));
+        rc = ddca_set_continuous_vcp_value(m_displayHandleList.at(dispIdx),
+                                           m_descrToVcp_perDisp.at(dispIdx)->value("Select color preset"),
+                                           m_vcpTovcpValueWithDescr_perDisp.at(dispIdx)->value(m_descrToVcp_perDisp.at(dispIdx)->value("Select color preset"))->key(newWhitepoint));
         qDebug()<<"set whitepoint returned: "<<rc;
-    }
 }
 

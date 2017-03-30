@@ -16,13 +16,14 @@ public:
     DDCutilController();
     void detect();
     //    bool isSupported() const;
-    long brightness() const;
-    long brightnessMax() const;
-    QList<QString> whitePointList() const;
+    unsigned int monitorNumber() const;
+    long brightness(const unsigned int dispIdx) const;
+    long brightnessMax(const unsigned int dispIdx) const;
+    QList<QString> whitePointList(const unsigned int dispIdx) const;
 public slots:
-    void setBrightness(long value);
+    void setBrightness(const unsigned int dispIdx, long value);
     QString nameForDisplay(const unsigned int iDisplay);
-    void setWhitepoint(const QString &newWhitepoint);
+    void setWhitepoint(const unsigned int dispIdx, const QString &newWhitepoint);
 
 private:
 
