@@ -23,7 +23,7 @@ void DDCutilController::detect(){
 
     qDebug()<<"\nCheck for monitors using ddca_get_displays()...\n";
     // Inquire about detected monitors.
-    DDCA_Display_Info_List * dlist = ddca_get_displays();
+    DDCA_Display_Info_List * dlist = ddca_get_display_info_list();
     qDebug()<<"ddca_get_displays() returned "<< dlist;
     qDebug()<<dlist->ct << "display(s) were detected";
     for(int iDisp=0;iDisp<dlist->ct;iDisp++)
@@ -36,20 +36,20 @@ void DDCutilController::detect(){
 
         rc = ddca_create_dispno_display_identifier(iDisp+1, &did); // ddcutil uses 1 paded indexing for displays
 
-        char * did_repr = ddca_repr_display_identifier(did);
+        char * did_repr = ddca_did_repr(did);
 
         qDebug()<<"did="<<did_repr;
 
         qDebug()<<"Create a display reference from the display identifier...";
-        rc = ddca_create_display_ref(did, &dref);
+        rc = ddca_get_display_ref(did, &dref);
 
         if (rc != 0) {
             qDebug()<<"ddct_get_display_ref() returned "<<
-                      rc<< " ("<<ddca_status_code_name(rc) <<
-                      "): "<< ddca_status_code_desc(rc);
+                      rc<< " ("<<ddca_rc_name(rc) <<
+                      "): "<< ddca_rc_desc(rc);
         }
         else {
-            char * dref_repr = ddca_repr_display_ref(dref);
+            char * dref_repr = ddca_did_repr(dref);
             qDebug()<<"dref= " << dref_repr;
 
             qDebug()<<"Open the display reference, creating a display handle...";
@@ -74,7 +74,7 @@ void DDCutilController::detect(){
 
 
 
-                Version_Feature_Info* featureInfo;
+                DDCA_Version_Feature_Info* featureInfo;
                 for(int iVcp=0;iVcp<parsedCapabilities->vcp_code_ct;iVcp++)
                 {
 
@@ -159,22 +159,22 @@ long DDCutilController::brightness(const unsigned int dispIdx) const
 {
 
     //FIXME: gets value for display 1
-    Single_Vcp_Value *returnValue;
+    DDCA_Single_Vcp_Value *returnValue;
 
         ddca_get_vcp_value(m_displayHandleList.at(dispIdx),
                            m_descrToVcp_perDisp.at(dispIdx)->value("Brightness"),
-                           NON_TABLE_VCP_VALUE, &returnValue);
+                           DDCA_NON_TABLE_VCP_VALUE, &returnValue);
 
     return (long)returnValue->val.c.cur_val;
 }
 
 long DDCutilController::brightnessMax(const unsigned int dispIdx) const
 {
-    Single_Vcp_Value *returnValue;
+    DDCA_Single_Vcp_Value *returnValue;
 
         ddca_get_vcp_value(m_displayHandleList.at(dispIdx),
                            m_descrToVcp_perDisp.at(dispIdx)->value("Brightness"),
-                           NON_TABLE_VCP_VALUE, &returnValue);
+                           DDCA_NON_TABLE_VCP_VALUE, &returnValue);
 
     return (long) returnValue->val.c.max_val;
 
