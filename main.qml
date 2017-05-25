@@ -72,5 +72,14 @@ ApplicationWindow
                 }
             }
         }
+
+        Tab {
+            Text {
+                anchors.fill: parent
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                text: "No DDC-capable display detected."
+            }
+        }
     }
 }
