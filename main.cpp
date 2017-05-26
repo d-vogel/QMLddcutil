@@ -15,8 +15,12 @@ static QQmlApplicationEngine* engine;
 class QDetectThread: public QThread {
 private slots:
     void onFinishedInternal() {
-        engine->rootContext()->setContextProperty("displayListItemModel", QVariant::fromValue(displayList));
-        engine->rootContext()->setContextProperty("tabViewIndex", 1);
+        if (displayList.count() > 0) {
+            engine->rootContext()->setContextProperty("displayListItemModel", QVariant::fromValue(displayList));
+            engine->rootContext()->setContextProperty("tabViewIndex", 1);
+        } else {
+            engine->rootContext()->setContextProperty("tabViewIndex", 2);
+        }
     }
 
 private:
