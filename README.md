@@ -28,6 +28,6 @@ The GUI tool is pretty much a toy/demo app. Please don't suppose it to be rock s
 For now provided as a QtCreator project: open the .pro file, configure, run.
 
 Things that need to be improved:
-* ~~multi monitor support: several methods of the ddccontroller class do not make any use of the data stored for other monitors than the first one listed by ddcutil.~~ <- should be present, needs testing
-* loading the app is somewhat slow: it would be nice to have the GUI popup to inform that work is beeing done by the ddccontroller instance in the back.
+* ~~multi monitor support: several methods of the ddccontroller class do not make any use of the data stored for other monitors than the first one listed by ddcutil.~~ ~~<- should be present, needs testing~~ Tested by @laloch
+* ~~loading the app is somewhat slow: it would be nice to have the GUI popup to inform that work is beeing done by the ddccontroller instance in the back.~~ busy indicator + detect moved to another thread by @laloch
 * many other settings from the monitor can be added to the GUI.
