@@ -12,13 +12,18 @@ The first prerequisite is to be able to access your monitor using the comand lin
 #/etc/modules-load.d/ddc.conf
     i2c_dev
 ```
-after reboot `modprobe` should report i2c-dev.
+after reboot, `lsmod` should report i2c-dev.
 * create a udev rule setting ownership for `/dev/i2c-*` files to members of the i2c group.
 ```
 #/etc/udev/rules.d/10-local_i2c_group.rules
     KERNEL=="i2c-[0-9]*", GROUP="i2c"
 ```
 * create the i2c group, and add yourself to the group.
+```
+# groupadd i2c
+# gpasswd -a $whoami i2c
+# udevadm control -R    #reload udev rules or simply reboot
+```
 
 `ddcutil detect` should now find your DDC/CI capable monitors.
 
