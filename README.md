@@ -21,7 +21,7 @@ after reboot, `lsmod` should report i2c-dev.
 * create the i2c group, and add yourself to the group.
 ```
 # groupadd i2c
-# gpasswd -a $whoami i2c
+# gpasswd -a $(whoami) i2c
 # udevadm control -R    #reload udev rules or simply reboot
 ```
 
